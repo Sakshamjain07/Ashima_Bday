@@ -16,7 +16,7 @@
 :root{
   --ink:#121212; --paper:#F6F1E4; --pink:#FF4D9E; --lime:#D6F63E; --violet:#5B2BF0;
   --orange:#FF6A2B; --cobalt:#1B3CFF; --mint:#35E0A1;
-  --absent:#3A3A40; --present:#D9A521; --correct:#2FB56A; --key:#2A2A30;
+  --absent:#3A3A40; --line:#34343A; --dim:#5A5A62; --present:#D9A521; --correct:#2FB56A; --key:#2A2A30;
   --display:'Bricolage Grotesque','Arial Black',system-ui,sans-serif;
   --body:'DM Sans',system-ui,-apple-system,sans-serif;
   color-scheme:dark;
@@ -112,10 +112,37 @@ button:focus-visible{outline:3px solid var(--paper);outline-offset:3px}
 .stats dd{margin:0;font-family:var(--display);font-weight:800;font-size:clamp(24px,7.6cqw,34px);line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
 
 .card.final{justify-content:flex-start;gap:16px;padding-top:60px}
+.card.calcard{gap:10px;padding-bottom:20px}
 .msg{flex:1;min-height:0;overflow-y:auto;font-size:17px;line-height:1.55;display:flex;flex-direction:column;gap:12px;user-select:text;-webkit-user-select:text;padding-right:4px}
 .msg p{margin:0}
 .sign{font-family:var(--display);font-weight:800;font-size:22px;margin:0;color:var(--pink)}
 
+.calhead{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.calhead h2{margin:0;font-family:var(--display);font-weight:800;font-size:clamp(22px,7cqw,34px);letter-spacing:-.02em;white-space:nowrap}
+.calhead button{width:42px;height:42px;border-radius:50%;background:var(--key);color:var(--paper);font-size:22px;font-weight:700;line-height:1}
+.calhead button:disabled{opacity:.25;cursor:default}
+.dow,.calgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.dow span{text-align:center;font-size:11px;font-weight:700;letter-spacing:.1em;opacity:.6}
+.calgrid button,.calgrid i{height:clamp(26px,4.6cqh,40px);border-radius:8px;font-size:13px;font-weight:700;padding:0;font-variant-numeric:tabular-nums}
+.calgrid button{background:color-mix(in srgb,var(--lime) var(--p,0%),var(--key));color:var(--paper)}
+.calgrid button.hi{color:var(--ink)}
+.calgrid button.ev{background:var(--pink);color:var(--ink)}
+.calgrid button.off{background:transparent;color:var(--dim);pointer-events:none}
+.calgrid button.sel{outline:3px solid var(--paper);outline-offset:1px}
+.calkey{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.85;flex-wrap:wrap}
+.calkey i{width:12px;height:12px;border-radius:3px;background:color-mix(in srgb,var(--lime) var(--p),var(--key))}
+.calkey i.e{background:var(--pink);margin-left:10px}
+.daybox{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--line);padding-top:12px;user-select:text;-webkit-user-select:text}
+.daybox h3{font-family:var(--display);font-weight:800;font-size:clamp(24px,7.5cqw,32px);line-height:1;letter-spacing:-.02em;margin:0;color:var(--pink);text-wrap:balance}
+.daybox p{margin:0;font-size:16px;line-height:1.4}
+.quotes{display:flex;flex-direction:column;gap:6px;margin-top:4px}
+.quotes div{max-width:86%;padding:8px 12px 9px;border-radius:14px;font-size:15px;line-height:1.3;display:flex;flex-direction:column;gap:2px;overflow-wrap:anywhere}
+.quotes div.s{align-self:flex-start;background:var(--key);color:var(--paper);border-bottom-left-radius:4px}
+.quotes div.a{align-self:flex-end;background:var(--lime);color:var(--ink);border-bottom-right-radius:4px}
+.quotes small{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.7}
+.calbtns{display:flex;gap:6px 12px;align-items:center}
+.calbtns button{white-space:nowrap}
+.ghost{background:transparent;color:var(--paper);font-weight:700;font-size:13px;text-decoration:underline;padding:10px 4px}
 @keyframes spin{to{rotate:360deg}}
 @keyframes breathe{from{scale:.92}to{scale:1.08}}
 @keyframes slide{to{background-position:48.5px 0}}
@@ -306,7 +333,14 @@ const CARDS = [
   {bg:'paper', fg:'ink', dense:1, html: deco('blob','pink') +
     '<p class="kicker" style="color:var(--violet)">We also exchanged</p>' + stats([['Photos','2,541'],['Stickers','2,379'],['Calls dialled','1,275'],['Voice notes','505'],['Reels','369'],['"Koini"s from you','149']])},
   {bg:'lime', fg:'ink', dense:1, html: deco('rays','violet') +
-    '<p class="kicker">Ashima &amp; Saksham, wrapped up</p>' + stats([['Messages','1,01,612'],['Streak','302 days'],['Top emoji','\u{1F62D}'],['Top word','bhai'],['Peak hour','11 PM'],['Reply time','16 sec'],['Biggest day','1,151'],['I love yous in one text','5,957']]) + '<p class="sub">One more thing.</p>'},
+    '<p class="kicker">Ashima &amp; Saksham, wrapped up</p>' + stats([['Messages','1,01,612'],['Streak','302 days'],['Top emoji','\u{1F62D}'],['Top word','bhai'],['Peak hour','11 PM'],['Reply time','16 sec'],['Biggest day','1,151'],['I love yous in one text','5,957']]) + '<p class="sub">Now, the days behind the numbers.</p>'},
+  {bg:'ink', fg:'paper', final:1, cal:1, html:
+    '<p class="kicker" style="color:var(--lime)">Our year, day by day</p>' +
+    '<div class="calhead"><button id="calPrev" aria-label="Previous month">&#8249;</button><h2 id="calTitle"></h2><button id="calNext" aria-label="Next month">&#8250;</button></div>' +
+    '<div class="dow"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div><div class="calgrid" id="calGrid"></div>' +
+    '<div class="calkey"><span>Quiet</span><i style="--p:8%"></i><i style="--p:28%"></i><i style="--p:50%"></i><i style="--p:72%"></i><i style="--p:95%"></i><span>Chatty</span><i class="e"></i><span>Special</span></div>' +
+    '<div class="daybox" id="dayBox" aria-live="polite"><p class="kicker" id="dayMeta"></p><h3 id="dayTitle"></h3><p id="dayText"></p><div class="quotes" id="dayQuotes"></div></div>' +
+    '<div class="calbtns"><button class="pill" id="calEv" style="--fg:var(--lime);--bg:var(--ink);font-size:15px;padding:12px 18px">Next special day</button><button class="ghost" id="calDone">Skip to message</button></div>'},
   {bg:'ink', fg:'paper', final:1, html:
     '<p class="kicker" style="color:var(--lime)">The part I actually wanted to say</p><h2 class="title" style="color:var(--pink);font-size:clamp(36px,12cqw,54px)">Happy Birthday, Ashima.</h2><div class="msg" id="msg"></div><p class="sign"></p><button class="pill" id="replay" style="--fg:var(--lime);--bg:var(--ink)">Watch again</button>'}
 ];
@@ -314,11 +348,688 @@ const CARDS = [
 const DUR = 7500;
 let idx = 0, elapsed = 0, paused = false, last = 0, down = null, running = false;
 const cardsEl = $('cards'), segsEl = $('segs');
-cardsEl.innerHTML = CARDS.map(c => '<article class="card' + (c.dense ? ' dense' : '') + (c.final ? ' final' : '') + '" style="--bg:var(--' + c.bg + ');--fg:var(--' + c.fg + ')" hidden>' + c.html + '</article>').join('');
+cardsEl.innerHTML = CARDS.map(c => '<article class="card' + (c.dense ? ' dense' : '') + (c.final ? ' final' : '') + (c.cal ? ' calcard' : '') + '" style="--bg:var(--' + c.bg + ');--fg:var(--' + c.fg + ')" hidden>' + c.html + '</article>').join('');
 segsEl.innerHTML = CARDS.map(() => '<i><b></b></i>').join('');
 const cardEls = [...cardsEl.children], segEls = [...segsEl.querySelectorAll('b')];
 $('msg').innerHTML = MESSAGE.map(p => '<p>' + p.replace(/&/g, '&amp;').replace(/</g, '&lt;') + '</p>').join('');
 document.querySelector('.sign').textContent = SIGN;
+
+/* ---------- calendar ---------- */
+/* EDIT: 'YYYY-MM-DD': ['Title', 'One or two lines'] */
+const EVENTS = {
+ "2025-10-11": [
+  "Your birthday",
+  "We celebrated at your flat at midnight. We danced, played Never Have I Ever and took a ridiculous number of photos."
+ ],
+ "2025-10-12": [
+  "Reso, then clubbing",
+  "Reso during the day, and that night we went clubbing for the first time.",
+  [
+   [
+    "S",
+    "3:23 AM",
+    "And we had soooo much fun"
+   ]
+  ]
+ ],
+ "2025-10-17": [
+  "10 months of us",
+  "Double digits, and a whole paragraph waiting for you before you woke up.",
+  [
+   [
+    "S",
+    "8:55 AM",
+    "Happyyyyyy 10 months meri jaan. We hit double digits wowwww"
+   ],
+   [
+    "A",
+    "two days later",
+    "HAPPY 10 months 1 day"
+   ]
+  ]
+ ],
+ "2025-10-18": [
+  "Head girl returns",
+  "Your school alumni meet. The head girl went back to her school.",
+  [
+   [
+    "S",
+    "that night",
+    "ur eye makeup looked veryyyyy pretty"
+   ]
+  ]
+ ],
+ "2025-10-20": [
+  "Diwali",
+  "Pooja at home in the evening, and wishes at midnight.",
+  [
+   [
+    "A",
+    "12:32 AM",
+    "HAPPY DIWALI😋😋😋😋"
+   ],
+   [
+    "S",
+    "8:24 AM",
+    "Happy diwaliiiii my patakha 😍😍"
+   ]
+  ]
+ ],
+ "2025-10-21": [
+  "Chokhi Dhani",
+  "You went to Chokhi Dhani, Sonipat, and you looked very hot and chic in that red bandana."
+ ],
+ "2025-10-24": [
+  "NSP date",
+  "Our date at NSP, the day before you flew off.",
+  [
+   [
+    "S",
+    "8:03 PM",
+    "Today was so funnn"
+   ]
+  ]
+ ],
+ "2025-10-25": [
+  "Meghalaya",
+  "You flew out with your family. Waterfalls for you, and an empty Delhi for me.",
+  [
+   [
+    "S",
+    "10:49 PM",
+    "Maine ghar aate hi aapke plushie ko hug kiya"
+   ]
+  ]
+ ],
+ "2025-10-29": [
+  "You came back",
+  "The flight home from Meghalaya.",
+  [
+   [
+    "S",
+    "5:28 PM",
+    "Come home fastttttt"
+   ],
+   [
+    "S",
+    "5:29 PM",
+    "And by home means into my arms 🥺"
+   ]
+  ]
+ ],
+ "2025-10-30": [
+  "GD round, wrapped",
+  "You hosted the 180DC group discussions, wrapped up the round, and then wrote every junior their own feedback."
+ ],
+ "2025-11-07": [
+  "Hot chocolate in CP",
+  "The place we wanted was either full or closed, so we found a cozy new one instead and had hot chocolate there."
+ ],
+ "2025-11-26": [
+  "Study dates",
+  "End sems, and whole days of studying together on meets.",
+  [
+   [
+    "S",
+    "1:43 AM",
+    "Pure din aapke saath meets mein baithkr padhna is the best thing of my day"
+   ]
+  ]
+ ],
+ "2025-12-06": [
+  "5,957 I love yous",
+  "One message at 1:23 PM, cut off by WhatsApp at 65,536 characters.",
+  [
+   [
+    "S",
+    "10:43 PM",
+    "The limit of characters reached"
+   ]
+  ]
+ ],
+ "2025-12-09": [
+  "The train to Mumbai",
+  "We left for E-Summit at IIT Bombay.",
+  [
+   [
+    "S",
+    "4:01 PM",
+    "I cannot miss rhis train"
+   ]
+  ]
+ ],
+ "2025-12-10": [
+  "Mumbai",
+  "Zero messages on this day. We did not need any, because we were together."
+ ],
+ "2025-12-11": [
+  "Mumbai",
+  "Marine Drive, and that cafe in front of Gaylord. Still zero messages."
+ ],
+ "2025-12-12": [
+  "Mumbai",
+  "The third and last day all year that we did not text at all."
+ ],
+ "2025-12-13": [
+  "The train back",
+  "The journey home from Mumbai.",
+  [
+   [
+    "A",
+    "the next day",
+    "The trip was so good"
+   ],
+   [
+    "A",
+    "the next day",
+    "Bhai wapis aate hue train mei bhi kitna cozy tha"
+   ],
+   [
+    "S",
+    "the next day",
+    "Bhai i was abt to cry when u left"
+   ]
+  ]
+ ],
+ "2025-12-15": [
+  "The scooty ride",
+  "You sat behind me.",
+  [
+   [
+    "S",
+    "8:10 PM",
+    "I had sm fun when u were sitting behind me"
+   ],
+   [
+    "A",
+    "8:11 PM",
+    "Yeah mujhe bhi bhot maza aaya"
+   ]
+  ]
+ ],
+ "2025-12-17": [
+  "One year of us",
+  "Your note arrived at exactly 12:00. Mine came back at 12:15 and ran to 6,843 characters.",
+  [
+   [
+    "S",
+    "12:18 AM",
+    "God i cried I literally cried reading this Ashima"
+   ]
+  ]
+ ],
+ "2025-12-22": [
+  "A paragraph to wake up to",
+  "Written while you were asleep, so you would wake up with that cutu si smile."
+ ],
+ "2025-12-25": [
+  "Christmas",
+  "You spent the whole day building your bakery website, OTP login and all.",
+  [
+   [
+    "S",
+    "10:50 PM",
+    "Ik you worked v hard today I’m so fucking proud of you"
+   ]
+  ]
+ ],
+ "2025-12-27": [
+  "Payment gateway, done",
+  "Another piece of your website, built by you.",
+  [
+   [
+    "A",
+    "6:09 PM",
+    "Abhi payment gateway integrate kiya"
+   ]
+  ]
+ ],
+ "2026-01-01": [
+  "New Year",
+  "We both hit send at exactly 12:00.",
+  [
+   [
+    "A",
+    "12:00 AM",
+    "HAPPY NEW YEAR FAVVV LYSM🥰"
+   ],
+   [
+    "S",
+    "12:00 AM",
+    "Happy new yearrrrr. Meri jaaaan to another year full of joy happiness and everything with you"
+   ]
+  ]
+ ],
+ "2026-01-12": [
+  "A perfect day",
+  "One of those days we never wanted to end.",
+  [
+   [
+    "S",
+    "next morning",
+    "Yesterday was so perfecttttt"
+   ],
+   [
+    "A",
+    "next morning",
+    "Yeah it was really nice"
+   ],
+   [
+    "S",
+    "next morning",
+    "We should do this every weekkkkk 😋"
+   ]
+  ]
+ ],
+ "2026-01-17": [
+  "13 months of us",
+  "Our day of the month.",
+  [
+   [
+    "S",
+    "the next night",
+    "And guess what yesterday I completed 13 months being together with that hot stuff 😋"
+   ]
+  ]
+ ],
+ "2026-01-21": [
+  "Our pitch deck",
+  "Teammates too, at 180DC.",
+  [
+   [
+    "A",
+    "9:20 AM",
+    "Since me and saksham prepared the pitch deck, we will divide what to present."
+   ]
+  ]
+ ],
+ "2026-02-10": [
+  "420 days",
+  "420 days, and over 10,000 hours together. I did the maths that morning."
+ ],
+ "2026-02-14": [
+  "Valentine's Day",
+  "Together.",
+  [
+   [
+    "S",
+    "2:17 AM",
+    "I love you the mostttt my valentine 💘"
+   ]
+  ]
+ ],
+ "2026-02-17": [
+  "14 months of us",
+  "And a date announced a week in advance.",
+  [
+   [
+    "S",
+    "7:05 PM",
+    "Clear ur calendar for next Tuesday"
+   ],
+   [
+    "S",
+    "7:06 PM",
+    "We going on date"
+   ]
+  ]
+ ],
+ "2026-02-21": [
+  "A paragraph to wake up to",
+  "No reason. Just so it would be the first thing you read."
+ ],
+ "2026-02-24": [
+  "Movie date",
+  "The Tuesday you kept free. Lunch, a movie, and your laptop, because you still had work to do."
+ ],
+ "2026-03-03": [
+  "Holi at college",
+  "Colours, photos, and my knee, which did not survive.",
+  [
+   [
+    "S",
+    "10:39 AM",
+    "Photos toh I’ll take. Before any colour even touches ur skin"
+   ]
+  ]
+ ],
+ "2026-03-04": [
+  "Holi",
+  "Holi, apart this time.",
+  [
+   [
+    "A",
+    "12:10 AM",
+    "Happy Holi loml"
+   ],
+   [
+    "S",
+    "9:11 AM",
+    "Happy Holi meri jaannnnnn"
+   ],
+   [
+    "S",
+    "3:00 PM",
+    "Aapke saath Wapis Holi khelni haiiiiii"
+   ]
+  ]
+ ],
+ "2026-03-25": [
+  "The SG Consulting interview",
+  "You aced it.",
+  [
+   [
+    "S",
+    "8:53 PM",
+    "Ready to ace that interview then ?"
+   ]
+  ]
+ ],
+ "2026-03-26": [
+  "The proposal, sort of",
+  "Twenty past midnight.",
+  [
+   [
+    "A",
+    "12:20 AM",
+    "Shaadi karlete hain😛"
+   ],
+   [
+    "S",
+    "12:21 AM",
+    "Destination wedding chahiye 😤"
+   ]
+  ]
+ ],
+ "2026-04-02": [
+  "A midnight paragraph",
+  "No occasion. A paragraph at 12:34 AM and a voice note to go with it.",
+  [
+   [
+    "A",
+    "9:11 AM",
+    "I wanna spend the rest of my life w you too 🥺"
+   ]
+  ]
+ ],
+ "2026-04-06": [
+  "SG Consulting, day one",
+  "Your internship began.",
+  [
+   [
+    "A",
+    "the night before",
+    "The best part is whenever a baker and I get talking, they offer me a free pastry"
+   ]
+  ]
+ ],
+ "2026-04-15": [
+  "Moksha cancelled",
+  "All those outfits planned, and nowhere to wear them.",
+  [
+   [
+    "A",
+    "10:32 PM",
+    "MOKSHA CANCELLED"
+   ],
+   [
+    "S",
+    "10:33 PM",
+    "Legit 1 fest mein ni ge hum this season"
+   ]
+  ]
+ ],
+ "2026-05-31": [
+  "Back to back",
+  "RCB did it again.",
+  [
+   [
+    "S",
+    "11:27 PM",
+    "WE WONNNN"
+   ],
+   [
+    "A",
+    "11:28 PM",
+    "Yeah we is who"
+   ]
+  ]
+ ],
+ "2026-06-04": [
+  "Himachal",
+  "You flew off with a full plan: McLeodganj, the Triund trek, paragliding at Bir Billing, and an outfit for every single day."
+ ],
+ "2026-06-09": [
+  "You came back",
+  "The flight home from Himachal.",
+  [
+   [
+    "S",
+    "3:41 PM",
+    "Have a safe flight love"
+   ]
+  ]
+ ],
+ "2026-06-17": [
+  "A year and a half",
+  "Eighteen months.",
+  [
+   [
+    "A",
+    "9:42 AM",
+    "1.5 years"
+   ],
+   [
+    "S",
+    "9:42 AM",
+    "1.5 yearssssssss"
+   ]
+  ]
+ ],
+ "2026-06-19": [
+  "Internship, completed",
+  "You finished SG Consulting, with a certificate, an experience letter and an LOR promised."
+ ],
+ "2026-07-06": [
+  "Google called",
+  "The interview shortlist landed.",
+  [
+   [
+    "S",
+    "6:40 PM",
+    "Check mail 😋"
+   ],
+   [
+    "A",
+    "6:42 PM",
+    "OH MY"
+   ],
+   [
+    "A",
+    "6:42 PM",
+    "CONGRATULATIONS"
+   ],
+   [
+    "A",
+    "6:42 PM",
+    "IM SO PROUD OF YOU"
+   ]
+  ]
+ ],
+ "2026-07-08": [
+  "Google said yes",
+  "Interview day, and the result.",
+  [
+   [
+    "A",
+    "6:25 PM",
+    "Saksham im so proud of you"
+   ]
+  ]
+ ],
+ "2026-07-17": [
+  "19 months, and a lovely day",
+  "NSP, Elegante, Pacific and sneaker shopping.",
+  [
+   [
+    "S",
+    "1:50 AM",
+    "We had such a lovely day today"
+   ]
+  ]
+ ],
+ "2026-07-21": [
+  "You cracked Amex",
+  "A GD, then interviews, then the result the same night.",
+  [
+   [
+    "S",
+    "10:57 PM",
+    "I AM SOOOO FUCKING PROUD OF YOUUUU"
+   ],
+   [
+    "A",
+    "11:26 PM",
+    "😭you trusted me when i didn’t even trust myself lmao"
+   ]
+  ]
+ ],
+ "2026-08-02": [
+  "Friendship Day",
+  "Best friends first, always.",
+  [
+   [
+    "A",
+    "11:10 AM",
+    "today is friendship day wow"
+   ],
+   [
+    "S",
+    "12:21 PM",
+    "Happy friendship dayy"
+   ]
+  ]
+ ],
+ "2026-08-05": [
+  "Learner's licence",
+  "One step closer to driving you around.",
+  [
+   [
+    "A",
+    "10:00 PM",
+    "Learner’s license yay"
+   ],
+   [
+    "A",
+    "10:00 PM",
+    "Passenger princess banna h"
+   ]
+  ]
+ ],
+ "2026-08-24": [
+  "3,457 mwahs",
+  "All in one message.",
+  [
+   [
+    "A",
+    "10:56 PM",
+    "Mujhe nahi chahiye"
+   ],
+   [
+    "S",
+    "10:56 PM",
+    "Mwah mwah mwah mwah mwah mwah mwah mwah mwah mwah mwah mwah..."
+   ]
+  ]
+ ],
+ "2026-08-25": [
+  "The dream",
+  "A dream about our 32nd Avenue outing, and a paragraph about it first thing in the morning."
+ ],
+ "2026-08-27": [
+  "Date day",
+  "Pizza for lunch and a mall. One of our date days."
+ ],
+ "2026-09-06": [
+  "My birthday",
+  "Your note came at 12:06 AM, and we went to Echoes.",
+  [
+   [
+    "S",
+    "the next night",
+    "You got me such cute gifts. I love you soooooo much"
+   ]
+  ]
+ ],
+ "2026-10-06": [
+  "Amex, twice",
+  "Your team made the top 3.",
+  [
+   [
+    "S",
+    "7:31 AM",
+    "Also I’m soooo fucking proud of u"
+   ],
+   [
+    "S",
+    "7:31 AM",
+    "U cracked Amex twice"
+   ]
+  ]
+ ],
+ "2026-10-10": [
+  "The night before",
+  "A whole evening spent counting our year, so you could open this at midnight."
+ ],
+ "2026-10-11": [
+  "Your birthday",
+  "Today. Happy birthday, Ashima."
+ ]
+};
+const MONTHLY = {"11": "2025-11-17", "15": "2026-03-17", "16": "2026-04-17", "17": "2026-05-17", "20": "2026-08-17", "21": "2026-09-17"};
+const MLINES = ['Another 17th. Still us.', 'Our day of the month, again.', 'One more 17th in the bank.'];
+Object.keys(MONTHLY).forEach((n, i) => { if (!EVENTS[MONTHLY[n]]) EVENTS[MONTHLY[n]] = [n + ' months of us', n === '18' ? 'A year and a half.' : MLINES[i % MLINES.length]]; });
+const DAILY = [80,89,293,222,194,190,112,138,349,308,431,239,735,465,344,258,428,150,316,240,237,759,541,248,279,531,354,415,423,317,199,141,156,130,106,271,229,110,189,162,156,178,402,272,120,61,81,186,232,344,322,216,135,56,163,167,634,293,608,219,0,0,0,2,208,234,471,207,634,267,225,217,713,279,215,218,396,124,404,155,576,270,732,207,203,418,228,64,245,139,241,380,745,149,288,171,254,256,397,866,211,295,284,241,570,513,250,224,338,161,345,199,179,145,129,153,174,154,256,267,799,283,543,339,138,229,74,207,69,177,172,64,62,173,250,416,203,72,174,128,395,262,390,161,211,331,188,475,298,71,223,312,127,139,117,122,81,175,166,49,206,94,285,190,99,255,541,159,62,149,236,179,265,153,218,282,529,333,175,234,376,383,508,472,199,167,179,178,74,253,262,173,119,208,92,221,149,58,57,105,156,96,435,827,129,123,68,87,47,209,276,86,190,79,231,140,220,239,66,214,103,603,101,278,118,199,153,152,147,236,465,232,322,87,405,382,80,385,433,53,235,291,138,186,207,131,354,338,221,268,336,629,140,278,467,385,296,439,291,156,263,298,591,708,373,543,248,564,728,585,679,392,525,238,468,319,251,278,285,575,622,356,628,467,535,413,419,224,559,72,157,165,304,175,384,376,1151,251,725,259,183,222,368,550,176,306,274,561,431,501,304,622,237,282,247,388,552,387,420,578,246,168,380,338,204,306,335,244,142,532,203,275,432,111,164,355,69,458,534,291,142,156,90,55,83,45,226,378,136,92,598,589,415,136,156,58,93,88,292,227,233,353,243,226,490];
+const D0 = Date.UTC(2025, 9, 11), MNAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const EVKEYS = Object.keys(EVENTS).sort();
+let calM = 0, selKey = EVKEYS[0];
+const pad = n => String(n).padStart(2, '0');
+function level(n){ return n >= 541 ? 95 : n >= 376 ? 72 : n >= 237 ? 50 : n >= 156 ? 28 : n >= 1 ? 8 : 0; }
+function drawCal(){
+  const y = 2025 + Math.floor((9 + calM) / 12), m = (9 + calM) % 12;
+  $('calTitle').textContent = MNAMES[m] + ' ' + y;
+  $('calPrev').disabled = calM === 0; $('calNext').disabled = calM === 12;
+  const off = (new Date(Date.UTC(y, m, 1)).getUTCDay() + 6) % 7, dim = new Date(Date.UTC(y, m + 1, 0)).getUTCDate();
+  let h = '<i></i>'.repeat(off);
+  for (let d = 1; d <= dim; d++){
+    const k = y + '-' + pad(m + 1) + '-' + pad(d), i = Math.round((Date.UTC(y, m, d) - D0) / 864e5);
+    if (i < 0 || i > 365){ h += '<button class="off" disabled>' + d + '</button>'; continue; }
+    const p = level(DAILY[i] || 0);
+    h += '<button data-k="' + k + '" class="' + (EVENTS[k] ? 'ev' : p >= 50 ? 'hi' : '') + (k === selKey ? ' sel' : '') + '" style="--p:' + p + '%">' + d + '</button>';
+  }
+  $('calGrid').innerHTML = h;
+}
+function pick(k){
+  selKey = k;
+  const [y, m, d] = k.split('-').map(Number), i = Math.round((Date.UTC(y, m - 1, d) - D0) / 864e5), n = DAILY[i], ev = EVENTS[k];
+  calM = (y - 2025) * 12 + (m - 1) - 9;
+  const day = new Date(Date.UTC(y, m - 1, d)).toLocaleDateString('en-IN', {weekday:'short', day:'numeric', month:'short', year:'numeric', timeZone:'UTC'});
+  $('dayMeta').textContent = day + (n === undefined ? '' : '  \u00b7  ' + n.toLocaleString('en-IN') + (n === 1 ? ' message' : ' messages'));
+  $('dayTitle').textContent = ev ? ev[0] : n >= 541 ? 'A very chatty day' : n >= 237 ? 'A regular us day' : 'A quiet one';
+  $('dayText').textContent = ev ? ev[1] : n >= 541 ? 'One of the chattiest days of our whole year.' : n >= 237 ? 'Nothing special happened. We just talked all day, like always.' : 'We were probably busy. Or together.';
+  const qb = $('dayQuotes'); qb.textContent = '';
+  ((ev && ev[2]) || []).forEach(([who, when, text]) => { const d = document.createElement('div'), m = document.createElement('small'), t = document.createElement('span'); d.className = who === 'S' ? 's' : 'a'; m.textContent = (who === 'S' ? 'Saksham' : 'Ashima') + '  \u00b7  ' + when; t.textContent = text; d.append(m, t); qb.append(d); });
+  $('dayBox').scrollTop = 0;
+  $('calEv').textContent = k === EVKEYS[EVKEYS.length - 1] ? 'Read my message' : 'Next special day';
+  drawCal();
+}
+$('calGrid').addEventListener('click', e => { const b = e.target.closest('button[data-k]'); if (b) pick(b.dataset.k); });
+$('calPrev').addEventListener('click', () => { if (calM > 0){ calM--; drawCal(); } });
+$('calNext').addEventListener('click', () => { if (calM < 12){ calM++; drawCal(); } });
+$('calEv').addEventListener('click', () => { const nx = EVKEYS.find(k => k > selKey); nx ? pick(nx) : go(idx + 1); });
+$('calDone').addEventListener('click', () => go(idx + 1));
+pick(selKey);
+
 
 function countUp(el){
   const n = +el.dataset.n, suf = el.dataset.suffix || '', t0 = performance.now(), d = 1100;
@@ -348,7 +1059,7 @@ function openStory(i){
   if (!running){ running = true; last = performance.now(); requestAnimationFrame(tick); }
 }
 const story = $('story');
-story.addEventListener('pointerdown', e => { if (e.target.closest('button,.msg')) return; down = performance.now(); paused = true; });
+story.addEventListener('pointerdown', e => { if (e.target.closest('button,.msg,.calcard')) return; down = performance.now(); paused = true; });
 story.addEventListener('pointerup', e => {
   if (down === null) return;
   const held = performance.now() - down; down = null; paused = false;
@@ -358,9 +1069,10 @@ story.addEventListener('pointerup', e => {
 story.addEventListener('contextmenu', e => e.preventDefault());
 $('replay').addEventListener('click', () => go(0));
 
-/* testing shortcuts: add #story or #message to the link to skip the puzzle */
+/* testing shortcuts: add #story, #calendar or #message to the link to skip the puzzle */
 if (location.hash === '#story') openStory(0);
 if (location.hash === '#message') openStory(CARDS.length - 1);
+if (location.hash === '#calendar') openStory(CARDS.length - 2);
 </script>
 </body>
 </html>
