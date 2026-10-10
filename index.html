@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#121212">
+<meta name="robots" content="noindex">
+<meta property="og:title" content="Happy Birthday, Chikkii">
+<meta property="og:description" content="I made you something. Open it.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%81%3C/text%3E%3C/svg%3E">
+<style>html{box-sizing:border-box;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Happy Birthday, Chikkii</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=DM+Sans:opsz,wght@9..40,400..700&display=swap">
+<style>
+/* Layout: one phone-shaped stage, full-bleed colour cards, giant type pinned to the bottom, one moving shape per card. Single committed look (dark stage). */
+:root{
+  --ink:#121212; --paper:#F6F1E4; --pink:#FF4D9E; --lime:#D6F63E; --violet:#5B2BF0;
+  --orange:#FF6A2B; --cobalt:#1B3CFF; --mint:#35E0A1;
+  --absent:#3A3A40; --present:#D9A521; --correct:#2FB56A; --key:#2A2A30;
+  --display:'Bricolage Grotesque','Arial Black',system-ui,sans-serif;
+  --body:'DM Sans',system-ui,-apple-system,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--ink);color:var(--paper);font-family:var(--body);display:flex;justify-content:center;overflow:hidden}
+.app{width:100%;max-width:440px;height:100%;position:relative;container-type:size;overflow:hidden;background:var(--ink)}
+button{font:inherit;color:inherit;border:0;cursor:pointer}
+button:focus-visible{outline:3px solid var(--paper);outline-offset:3px}
+.pill{background:var(--fg,var(--lime));color:var(--bg,var(--ink));font-family:var(--display);font-weight:800;font-size:18px;padding:16px 28px;border-radius:999px;align-self:flex-start}
+
+/* shared type scale */
+.kicker{font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin:0}
+.huge{font-family:var(--display);font-weight:800;font-size:clamp(64px,25cqw,112px);line-height:.86;letter-spacing:-.03em;margin:0;font-variant-numeric:tabular-nums}
+.title{font-family:var(--display);font-weight:800;font-size:clamp(44px,15cqw,68px);line-height:.92;letter-spacing:-.025em;margin:0;text-wrap:balance}
+.big{font-family:var(--display);font-weight:800;font-size:clamp(30px,9.5cqw,44px);line-height:1;letter-spacing:-.02em;margin:0;text-wrap:balance}
+.sub{font-size:18px;line-height:1.4;font-weight:500;margin:0;max-width:34ch}
+
+/* ---------- puzzle gate ---------- */
+#gate{position:absolute;inset:0;display:flex;flex-direction:column}
+.intro{--bg:var(--violet);--fg:var(--lime);position:absolute;inset:0;background:var(--bg);color:var(--fg);padding:32px 24px 40px;display:flex;flex-direction:column;justify-content:flex-end;gap:18px;overflow:hidden}
+.intro .sub{color:var(--paper)}
+.game{position:absolute;inset:0;display:flex;flex-direction:column;padding:20px 16px 14px;gap:12px}
+.dots{display:flex;gap:6px}
+.dots i{flex:1;height:4px;border-radius:2px;background:var(--absent)}
+.dots i.on{background:var(--lime)}
+.dots i.now{background:var(--pink)}
+.hint{font-family:var(--display);font-weight:800;font-size:clamp(22px,6.4cqw,28px);line-height:1.08;margin:0;text-wrap:balance}
+.gridwrap{flex:1;display:flex;align-items:center;justify-content:center;min-height:0}
+.grid{display:grid;grid-template-columns:repeat(var(--n),1fr);gap:6px;width:100%;max-width:min(calc(var(--n)*58px),calc((100cqh - 440px)/6*var(--n)))}
+.tile{aspect-ratio:1;border:2px solid var(--absent);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:800;font-size:clamp(18px,6cqw,28px);text-transform:uppercase}
+.tile.filled{border-color:var(--paper)}
+.tile.absent{background:var(--absent);border-color:var(--absent)}
+.tile.present{background:var(--present);border-color:var(--present);color:var(--ink)}
+.tile.correct{background:var(--correct);border-color:var(--correct);color:var(--ink)}
+.tile.flip{animation:flip .45s ease both}
+.row-shake{animation:shake .3s}
+.kb{display:flex;flex-direction:column;gap:6px}
+.kb div{display:flex;gap:5px;justify-content:center}
+.kb button{flex:1;max-width:40px;height:50px;border-radius:6px;background:var(--key);color:var(--paper);font-weight:700;font-size:15px;padding:0}
+.kb button.wide{flex:1.6;max-width:64px;font-size:12px}
+.kb button.absent{background:#18181B;color:#6B6B73}
+.kb button.present{background:var(--present);color:var(--ink)}
+.kb button.correct{background:var(--correct);color:var(--ink)}
+.result{--bg:var(--ink);--fg:var(--lime);display:flex;flex-direction:column;gap:14px;padding:4px 4px 10px}
+.result p{margin:0;font-size:18px;line-height:1.35;font-weight:500}
+.clue{background:var(--pink);color:var(--ink);border-radius:12px;padding:10px 14px;display:flex;flex-direction:column;gap:2px}
+.clue span{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+.clue p{margin:0;font-size:16px;font-weight:700;line-height:1.3}
+.toast{min-height:20px;text-align:center;font-size:14px;font-weight:700;color:var(--pink);margin:0}
+
+/* ---------- story ---------- */
+#story{position:absolute;inset:0;user-select:none;-webkit-user-select:none;touch-action:manipulation}
+.segs{position:absolute;top:10px;left:10px;right:10px;display:flex;gap:3px;z-index:5}
+.segs i{flex:1;height:3px;border-radius:2px;background:color-mix(in srgb,var(--segc,var(--paper)) 30%,transparent);overflow:hidden}
+.segs i b{display:block;height:100%;width:0;background:var(--segc,var(--paper))}
+.brand{position:absolute;top:24px;left:16px;z-index:5;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--segc,var(--paper));margin:0}
+.card{position:absolute;inset:0;background:var(--bg);color:var(--fg);padding:64px 24px 40px;display:flex;flex-direction:column;justify-content:flex-end;gap:14px;overflow:hidden}
+.card>*{position:relative;z-index:1}
+.card::after{content:"";position:absolute;left:0;right:0;top:0;height:84px;z-index:0;background:linear-gradient(var(--bg) 0 52%,transparent)}
+.card.in>*:not(.deco){animation:rise .55s cubic-bezier(.2,.8,.2,1) both}
+.card.in>*:nth-child(3){animation-delay:.08s}.card.in>*:nth-child(4){animation-delay:.16s}.card.in>*:nth-child(5){animation-delay:.24s}.card.in>*:nth-child(6){animation-delay:.32s}
+.card .deco{position:absolute;z-index:0;pointer-events:none}
+.card.dense .deco{opacity:.16}
+.d-rays{width:150cqw;aspect-ratio:1;right:-75cqw;top:-75cqw;border-radius:50%;background:repeating-conic-gradient(var(--d) 0 10deg,transparent 10deg 20deg);animation:spin 50s linear infinite}
+.d-rings{width:130cqw;aspect-ratio:1;left:-45cqw;top:-60cqw;border-radius:50%;background:repeating-radial-gradient(circle,var(--d) 0 14px,transparent 14px 28px);animation:breathe 7s ease-in-out infinite alternate}
+.d-stripes{left:-20%;right:-20%;top:-12%;height:52%;background:repeating-linear-gradient(115deg,var(--d) 0 22px,transparent 22px 44px);transform:skewY(-9deg);animation:slide 3s linear infinite}
+.d-blob{width:95cqw;aspect-ratio:1;right:-28cqw;top:-22cqw;background:var(--d);border-radius:42% 58% 63% 37%/41% 44% 56% 59%;animation:morph 9s ease-in-out infinite alternate,spin 40s linear infinite}
+
+.list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.list li{display:grid;grid-template-columns:28px 1fr auto;align-items:baseline;gap:10px;font-family:var(--display);font-weight:800;font-size:clamp(26px,8.4cqw,38px);line-height:1;letter-spacing:-.02em}
+.list li span:first-child{font-size:16px;opacity:.7}
+.list li span:last-child{font-family:var(--body);font-size:16px;font-weight:700;font-variant-numeric:tabular-nums}
+
+.hours{display:flex;align-items:flex-end;gap:3px;height:38cqw;max-height:170px}
+.hours i{flex:1;background:color-mix(in srgb,var(--fg) 35%,transparent);border-radius:3px 3px 0 0;min-height:2px}
+.hours i.peak{background:var(--pink)}
+.axis{display:flex;justify-content:space-between;font-size:12px;font-weight:700;letter-spacing:.08em;opacity:.7;margin-top:-8px}
+
+.vs{display:flex;flex-direction:column;gap:13px}
+.vs div.r{display:flex;flex-direction:column;gap:5px}
+.vs .lab{display:flex;justify-content:space-between;font-size:14px;font-weight:700;font-variant-numeric:tabular-nums}
+.vs .lab em{font-style:normal;font-weight:500;opacity:.85;flex:1;text-align:center}
+.vs .bar{display:flex;height:12px;border-radius:6px;overflow:hidden;gap:2px}
+.vs .bar i:first-child{background:var(--lime)}.vs .bar i:last-child{background:var(--pink)}
+.legend{display:flex;justify-content:space-between;font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.legend span:first-child{color:var(--lime)}.legend span:last-child{color:var(--pink)}
+
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:16px 14px;margin:0}
+.stats div{min-width:0}
+.stats dt{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;opacity:.75;margin-bottom:2px}
+.stats dd{margin:0;font-family:var(--display);font-weight:800;font-size:clamp(24px,7.6cqw,34px);line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+
+.card.final{justify-content:flex-start;gap:16px;padding-top:60px}
+.msg{flex:1;min-height:0;overflow-y:auto;font-size:17px;line-height:1.55;display:flex;flex-direction:column;gap:12px;user-select:text;-webkit-user-select:text;padding-right:4px}
+.msg p{margin:0}
+.sign{font-family:var(--display);font-weight:800;font-size:22px;margin:0;color:var(--pink)}
+
+@keyframes spin{to{rotate:360deg}}
+@keyframes breathe{from{scale:.92}to{scale:1.08}}
+@keyframes slide{to{background-position:48.5px 0}}
+@keyframes morph{to{border-radius:60% 40% 38% 62%/55% 61% 39% 45%}}
+@keyframes rise{from{opacity:0;translate:0 22px}to{opacity:1;translate:0 0}}
+@keyframes flip{0%{transform:rotateX(0)}50%{transform:rotateX(90deg)}100%{transform:rotateX(0)}}
+@keyframes shake{25%{translate:-6px 0}75%{translate:6px 0}}
+@media (prefers-reduced-motion:reduce){.deco,.card.in>*:not(.deco),.tile.flip,.row-shake{animation:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <section id="gate">
+    <div class="intro" id="intro">
+      <div class="deco d-rays" style="--d:var(--pink);position:absolute"></div>
+      <p class="kicker" style="position:relative">11 October</p>
+      <h1 class="title" style="position:relative">Happy Birthday, Chikkii.</h1>
+      <p class="sub" style="position:relative">I made you something. It is locked behind <span id="nwords">5</span> words that only you would know. Six tries each, and every wrong guess gets you a bigger hint, because I am nice.</p>
+      <button class="pill" id="startBtn" style="position:relative">Start</button>
+    </div>
+    <div class="game" id="game" hidden>
+      <div class="dots" id="dots"></div>
+      <p class="kicker" id="roundLabel">Word 1 of 5</p>
+      <p class="hint" id="hint"></p>
+      <div class="clue" id="clue" hidden><span id="clueLabel"></span><p id="clueText" aria-live="polite"></p></div>
+      <div class="gridwrap"><div class="grid" id="grid"></div></div>
+      <p class="toast" id="toast" aria-live="polite"></p>
+      <div class="result" id="result" hidden>
+        <p id="resultText"></p>
+        <button class="pill" id="nextBtn">Next word</button>
+      </div>
+      <div class="kb" id="kb"></div>
+    </div>
+  </section>
+
+  <section id="story" hidden>
+    <div class="segs" id="segs"></div>
+    <p class="brand">Ashima &amp; Saksham &middot; Wrapped</p>
+    <div id="cards"></div>
+  </section>
+</div>
+
+<script>
+/* ============ EDIT THESE ============ */
+const WORDS = [
+  {word:'BHAI', hint:'The least romantic thing we call each other.', win:'3,148 times since your last birthday, bhai.',
+   clues:['It is our most used word of the whole year.', 'It is Hindi, and it is what you would call a brother.', 'Four letters. You have typed it 1,736 times this year.']},
+  {word:'KOINI', hint:'Your one word for "it is fine". Even when it is not.', win:'You sent this 149 times this year.',
+   clues:['It is really two Hindi words squished into one.', 'It means "no problem".', 'The first half is KOI.']},
+  {word:'OKII', hint:'How I say yes when I am being cute.', win:'355 times this year. You only ever send the short version.',
+   clues:['It is "okay", but softer.', 'You send it too, 195 times this year, but with fewer letters.', 'Four letters, and the last two are the same.']},
+  {word:'DASHHH', hint:'The very first nickname I gave you.', win:'First Dashhh, then Shimmer, then Chikkii.',
+   clues:['It came before Shimmer and before Chikkii.', 'It is also a tiny line in punctuation, and what you do in a 100 metre race.', 'I spelled it with three of the same letter at the end.']},
+  {word:'ASHIMA', hint:'Who this whole thing is for.', win:'That is you. Present unlocked.',
+   clues:['Not a nickname this time.', 'I typed it 528 times this year, more than any nickname.', 'Six letters, and your mummy picked them.']}
+];
+const MESSAGE = [
+  '[Saksham: your birthday message goes here. Send it to me and I will drop it in.]'
+];
+const SIGN = 'Yours, Saksham';
+/* ==================================== */
+
+const $ = id => document.getElementById(id);
+const store = { get(k){ try { return localStorage.getItem(k) } catch(e){ return null } }, set(k,v){ try { localStorage.setItem(k,v) } catch(e){} } };
+const TRIES = 6;
+
+/* ---------- puzzle ---------- */
+let round = Math.min(parseInt(store.get('asw_round2') || '0', 10) || 0, WORDS.length);
+let guesses = [], cur = '', over = false;
+$('nwords').textContent = WORDS.length;
+
+function score(g, w){
+  const r = Array(w.length).fill('absent'), left = {};
+  for (let i = 0; i < w.length; i++){ if (g[i] === w[i]) r[i] = 'correct'; else left[w[i]] = (left[w[i]] || 0) + 1; }
+  for (let i = 0; i < w.length; i++){ if (r[i] !== 'correct' && left[g[i]] > 0){ r[i] = 'present'; left[g[i]]--; } }
+  return r;
+}
+function clueFor(){
+  const W = WORDS[round], w = W.word, k = guesses.length;
+  if (!k || k >= TRIES || guesses[k - 1] === w) return null;
+  let t;
+  if (k <= W.clues.length) t = W.clues[k - 1];
+  else if (k === W.clues.length + 1) t = 'It starts with ' + w[0] + ' and ends with ' + w[w.length - 1] + '.';
+  else { const m = Math.floor(w.length / 2), hide = w.length >= 6 ? [m - 1, m] : [m]; t = 'Almost there: ' + [...w].map((c, i) => hide.includes(i) ? '_' : c).join(' '); }
+  return {k, t};
+}
+function drawGame(flipRow){
+  const cl = clueFor(); $('clue').hidden = !cl;
+  if (cl){ $('clueLabel').textContent = 'Extra hint ' + cl.k + ' of ' + (TRIES - 1); $('clueText').textContent = cl.t; }
+  const w = WORDS[round].word, n = w.length, grid = $('grid');
+  grid.style.setProperty('--n', n);
+  let html = '';
+  for (let r = 0; r < TRIES; r++){
+    const g = guesses[r], s = g ? score(g, w) : null, text = g || (r === guesses.length ? cur : '');
+    for (let i = 0; i < n; i++){
+      const ch = text[i] || '';
+      const cls = s ? s[i] + (r === flipRow ? ' flip' : '') : (ch ? 'filled' : '');
+      html += '<div class="tile ' + cls + '"' + (r === flipRow ? ' style="animation-delay:' + (i * 90) + 'ms"' : '') + '>' + ch + '</div>';
+    }
+  }
+  grid.innerHTML = html;
+  const best = {}, rank = {absent:1, present:2, correct:3};
+  guesses.forEach(g => score(g, w).forEach((s, i) => { if (!best[g[i]] || rank[s] > rank[best[g[i]]]) best[g[i]] = s; }));
+  $('kb').innerHTML = ['QWERTYUIOP', 'ASDFGHJKL', '>ZXCVBNM<'].map(row => '<div>' + [...row].map(k =>
+    k === '>' ? '<button class="wide" data-k="ENTER">ENTER</button>' :
+    k === '<' ? '<button class="wide" data-k="BACK" aria-label="Delete">DEL</button>' :
+    '<button data-k="' + k + '" class="' + (best[k] || '') + '">' + k + '</button>').join('') + '</div>').join('');
+  $('dots').innerHTML = WORDS.map((_, i) => '<i class="' + (i < round ? 'on' : i === round ? 'now' : '') + '"></i>').join('');
+  $('roundLabel').textContent = 'Word ' + (round + 1) + ' of ' + WORDS.length + '  ·  ' + n + ' letters';
+  $('hint').textContent = WORDS[round].hint;
+}
+function press(k){
+  if (over || $('game').hidden) return;
+  const w = WORDS[round].word;
+  $('toast').textContent = '';
+  if (k === 'BACK'){ cur = cur.slice(0, -1); return drawGame(); }
+  if (k === 'ENTER'){
+    if (cur.length < w.length){ $('toast').textContent = 'Needs ' + w.length + ' letters'; return; }
+    guesses.push(cur); const won = cur === w; cur = '';
+    drawGame(guesses.length - 1);
+    if (won || guesses.length === TRIES){
+      over = true;
+      setTimeout(() => {
+        $('resultText').textContent = won ? WORDS[round].win : 'It was ' + w + '. No points lost, I still love you.';
+        $('nextBtn').textContent = round === WORDS.length - 1 ? 'Open my present' : 'Next word';
+        $('kb').hidden = true; $('result').hidden = false; $('nextBtn').focus();
+      }, w.length * 90 + 450);
+    }
+    return;
+  }
+  if (/^[A-Z]$/.test(k) && cur.length < w.length){ cur += k; drawGame(); }
+}
+$('kb').addEventListener('click', e => { const b = e.target.closest('button'); if (b) press(b.dataset.k); });
+document.addEventListener('keydown', e => {
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  if (!$('story').hidden){ if (e.key === 'ArrowRight' || e.key === ' ') go(idx + 1); if (e.key === 'ArrowLeft') go(idx - 1); return; }
+  if (e.key === 'Enter' && !over) press('ENTER'); else if (e.key === 'Backspace') press('BACK'); else if (/^[a-zA-Z]$/.test(e.key)) press(e.key.toUpperCase());
+});
+$('nextBtn').addEventListener('click', () => {
+  round++; store.set('asw_round2', String(round));
+  guesses = []; cur = ''; over = false; $('result').hidden = true; $('kb').hidden = false;
+  if (round >= WORDS.length) return openStory(0);
+  drawGame();
+});
+$('startBtn').addEventListener('click', () => {
+  if (round >= WORDS.length) return openStory(0);
+  $('intro').hidden = true; $('game').hidden = false; drawGame();
+});
+if (round >= WORDS.length) $('startBtn').textContent = 'Open my present';
+
+/* ---------- story ---------- */
+const HOURS = [9209,4965,1490,546,163,231,480,1034,3415,5033,7026,4999,4450,4592,3521,3791,3552,3958,4084,4851,6181,5915,8522,9604];
+const maxH = Math.max(...HOURS);
+const hoursHTML = '<div class="hours">' + HOURS.map(h => '<i class="' + (h === maxH ? 'peak' : '') + '" style="height:' + (h / maxH * 100).toFixed(1) + '%"></i>').join('') + '</div><div class="axis"><span>12 AM</span><span>6 AM</span><span>12 PM</span><span>6 PM</span><span>11 PM</span></div>';
+const list = rows => '<ol class="list">' + rows.map((r, i) => '<li><span>' + (i + 1) + '</span><span>' + r[0] + '</span><span>' + r[1] + '</span></li>').join('') + '</ol>';
+const vs = rows => '<div class="legend"><span>Saksham</span><span>Ashima</span></div><div class="vs">' + rows.map(r =>
+  '<div class="r"><div class="lab"><span>' + r[1].toLocaleString('en-IN') + '</span><em>' + r[0] + '</em><span>' + r[2].toLocaleString('en-IN') + '</span></div><div class="bar"><i style="flex:' + r[1] + '"></i><i style="flex:' + r[2] + '"></i></div></div>').join('') + '</div>';
+const stats = rows => '<dl class="stats">' + rows.map(r => '<div><dt>' + r[0] + '</dt><dd>' + r[1] + '</dd></div>').join('') + '</dl>';
+const deco = (kind, color) => '<div class="deco d-' + kind + '" style="--d:var(--' + color + ')"></div>';
+
+const CARDS = [
+  {bg:'violet', fg:'lime', html: deco('rays','pink') +
+    '<p class="kicker">Birthday edition</p><h2 class="title">Ashima &amp; Saksham Wrapped</h2><p class="sub" style="color:var(--paper)">One year of us on WhatsApp, from your last birthday to this one. Tap to go on. Hold to pause.</p>'},
+  {bg:'pink', fg:'ink', html: deco('rings','ink') +
+    '<p class="kicker">Since your last birthday we sent each other</p><p class="huge" data-n="101612" style="font-size:clamp(56px,21cqw,96px)">1,01,612</p><p class="big">messages.</p><p class="sub">About 278 a day, and roughly 3.7 lakh words. That is more than the first three Harry Potter books put together.</p>'},
+  {bg:'lime', fg:'ink', html: deco('blob','violet') +
+    '<p class="kicker">We have not missed a day since 13 December 2025</p><p class="huge" data-n="302">302</p><p class="big">days in a row.</p><p class="sub">Today makes it 303.</p>'},
+  {bg:'ink', fg:'paper', dense:1, html: deco('rings','violet') +
+    '<p class="kicker" style="color:var(--pink)">When we talk</p><p class="big">Our peak hour is 11 PM.</p>' + hoursHTML + '<p class="sub">9,604 messages between 11 and midnight. Another 16,373 after midnight, when we both should have been asleep.</p>'},
+  {bg:'orange', fg:'ink', html: deco('stripes','paper') +
+    '<p class="kicker">Our chat personality</p><h2 class="title">The Midnight Yappers</h2><p class="sub">Loudest on Sundays, quietest on Thursdays, and never once in bed on time.</p>'},
+  {bg:'cobalt', fg:'paper', dense:1, html: deco('rays','lime') +
+    '<p class="kicker" style="color:var(--lime)">Our top emojis</p>' + list([['\u{1F62D}','5,456'],['❤️','1,826'],['\u{1F97A}','1,244'],['\u{1F923}','1,002'],['\u{1F60B}','551']]) + '<p class="sub">We are a very stable couple.</p>'},
+  {bg:'paper', fg:'violet', html: deco('rays','pink') +
+    '<p class="kicker">Our most used word</p><p class="huge">bhai</p><p class="big" data-n="3148" data-suffix=" times.">3,148 times.</p><p class="sub" style="color:var(--ink)">You said it 1,736 times. I said it 1,412. Very romantic of us.</p>'},
+  {bg:'mint', fg:'ink', html: deco('rings','ink') +
+    '<p class="kicker">Our biggest day</p><p class="huge" data-n="1151">1,151</p><p class="big">messages on 3 August 2026.</p><p class="sub">Our busiest month was July 2026, with 12,852 messages.</p>'},
+  {bg:'ink', fg:'paper', dense:1, html: deco('blob','cobalt') +
+    '<p class="kicker">Who does it more</p>' + vs([['Texts first in the morning',278,90],['Good mornings',336,278],['Good nights',358,483],['"I miss you"',282,88],['Stickers',1160,1219],['Photos',967,1574]])},
+  {bg:'violet', fg:'paper', html: deco('blob','lime') +
+    '<p class="kicker" style="color:var(--lime)">How long we make each other wait</p><p class="huge" style="color:var(--lime)">16 sec</p><p class="big">is our usual reply time.</p><p class="sub">7 out of every 10 replies landed in under a minute.</p>'},
+  {bg:'pink', fg:'ink', html: deco('stripes','paper') +
+    '<p class="kicker">6 December 2025, 1:23 PM</p><p class="huge" data-n="5957">5,957</p><p class="big">I love yous in one single message.</p><p class="sub">WhatsApp cut me off at 65,536 characters. So on 24 August I came back with 3,457 mwahs.</p>'},
+  {bg:'orange', fg:'ink', dense:1, html: deco('rings','paper') +
+    '<p class="kicker">What I call you</p>' + list([['Ashima','528'],['Baby','332'],['Chikkii','205'],['Cutu','120'],['Meri jaan','94']]) + '<p class="sub">Before Chikkii there was Dashhh, and then Shimmer.</p>'},
+  {bg:'cobalt', fg:'lime', dense:1, html: deco('stripes','paper') +
+    '<p class="kicker">Your most sent messages</p>' + list([['yes','534'],['bhai','277'],['good morning','205'],['no','195'],['yeah','166']]) + '<p class="sub" style="color:var(--paper)">534 yeses to 195 nos. I like my odds.</p>'},
+  {bg:'paper', fg:'ink', dense:1, html: deco('blob','pink') +
+    '<p class="kicker" style="color:var(--violet)">We also exchanged</p>' + stats([['Photos','2,541'],['Stickers','2,379'],['Calls dialled','1,275'],['Voice notes','505'],['Reels','369'],['"Koini"s from you','149']])},
+  {bg:'lime', fg:'ink', dense:1, html: deco('rays','violet') +
+    '<p class="kicker">Ashima &amp; Saksham, wrapped up</p>' + stats([['Messages','1,01,612'],['Streak','302 days'],['Top emoji','\u{1F62D}'],['Top word','bhai'],['Peak hour','11 PM'],['Reply time','16 sec'],['Biggest day','1,151'],['I love yous in one text','5,957']]) + '<p class="sub">One more thing.</p>'},
+  {bg:'ink', fg:'paper', final:1, html:
+    '<p class="kicker" style="color:var(--lime)">The part I actually wanted to say</p><h2 class="title" style="color:var(--pink);font-size:clamp(36px,12cqw,54px)">Happy Birthday, Ashima.</h2><div class="msg" id="msg"></div><p class="sign"></p><button class="pill" id="replay" style="--fg:var(--lime);--bg:var(--ink)">Watch again</button>'}
+];
+
+const DUR = 7500;
+let idx = 0, elapsed = 0, paused = false, last = 0, down = null, running = false;
+const cardsEl = $('cards'), segsEl = $('segs');
+cardsEl.innerHTML = CARDS.map(c => '<article class="card' + (c.dense ? ' dense' : '') + (c.final ? ' final' : '') + '" style="--bg:var(--' + c.bg + ');--fg:var(--' + c.fg + ')" hidden>' + c.html + '</article>').join('');
+segsEl.innerHTML = CARDS.map(() => '<i><b></b></i>').join('');
+const cardEls = [...cardsEl.children], segEls = [...segsEl.querySelectorAll('b')];
+$('msg').innerHTML = MESSAGE.map(p => '<p>' + p.replace(/&/g, '&amp;').replace(/</g, '&lt;') + '</p>').join('');
+document.querySelector('.sign').textContent = SIGN;
+
+function countUp(el){
+  const n = +el.dataset.n, suf = el.dataset.suffix || '', t0 = performance.now(), d = 1100;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  (function f(t){ const p = Math.min(1, (t - t0) / d), e = 1 - Math.pow(1 - p, 3); el.textContent = Math.round(n * e).toLocaleString('en-IN') + suf; if (p < 1 && !el.closest('.card').hidden) requestAnimationFrame(f); else el.textContent = n.toLocaleString('en-IN') + suf; })(t0);
+}
+function go(i){
+  if (i < 0 || i >= CARDS.length) return;
+  idx = i; elapsed = 0;
+  cardEls.forEach((c, j) => { c.hidden = j !== i; c.classList.remove('in'); });
+  const c = cardEls[i]; void c.offsetWidth; c.classList.add('in');
+  c.querySelectorAll('[data-n]').forEach(countUp);
+  $('story').style.setProperty('--segc', 'var(--' + CARDS[i].fg + ')');
+  segEls.forEach((s, j) => s.style.width = j < i ? '100%' : j === i && CARDS[i].final ? '100%' : '0');
+}
+function tick(t){
+  if (!running) return;
+  if (!paused && !CARDS[idx].final){
+    elapsed += Math.min(100, t - last);
+    segEls[idx].style.width = Math.min(100, elapsed / DUR * 100) + '%';
+    if (elapsed >= DUR) go(idx + 1);
+  }
+  last = t; requestAnimationFrame(tick);
+}
+function openStory(i){
+  $('gate').hidden = true; $('story').hidden = false; go(i);
+  if (!running){ running = true; last = performance.now(); requestAnimationFrame(tick); }
+}
+const story = $('story');
+story.addEventListener('pointerdown', e => { if (e.target.closest('button,.msg')) return; down = performance.now(); paused = true; });
+story.addEventListener('pointerup', e => {
+  if (down === null) return;
+  const held = performance.now() - down; down = null; paused = false;
+  if (held < 300){ const r = story.getBoundingClientRect(); (e.clientX - r.left < r.width * 0.3) ? go(idx - 1) : go(idx + 1); }
+});
+['pointercancel', 'pointerleave'].forEach(ev => story.addEventListener(ev, () => { down = null; paused = false; }));
+story.addEventListener('contextmenu', e => e.preventDefault());
+$('replay').addEventListener('click', () => go(0));
+
+/* testing shortcuts: add #story or #message to the link to skip the puzzle */
+if (location.hash === '#story') openStory(0);
+if (location.hash === '#message') openStory(CARDS.length - 1);
+</script>
+</body>
+</html>
